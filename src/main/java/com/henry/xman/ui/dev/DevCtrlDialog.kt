@@ -2,7 +2,7 @@ package com.henry.xman.ui.dev
 
 import com.intellij.ui.components.JBLabel
 import com.henry.xman.bean.KitConfig
-import com.henry.xman.util.Utils
+import com.henry.xman.util.DevUtil
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JButton
@@ -41,7 +41,7 @@ class DevCtrlDialog(private val info: KitConfig.ModuleInfo) : JDialog() {
                 text = "OK"
                 info.dev = !devStateBtn.isSelected
                 addActionListener {
-                    Utils.updateConfigJson(Utils.getProjectConfig()?.apply {
+                    DevUtil.updateConfigJson(DevUtil.getProjectConfig()?.apply {
                         setModuleDep(info)
                     })
                     dispose()

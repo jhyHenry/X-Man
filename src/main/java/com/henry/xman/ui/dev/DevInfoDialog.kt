@@ -2,10 +2,10 @@ package com.henry.xman.ui.dev
 
 import com.henry.xman.bean.KitConfig
 import com.henry.xman.callback.ConfigCallback
+import com.henry.xman.util.CommonUtil
 import com.henry.xman.util.JsonUtil
-import com.henry.xman.util.Utils.getConfigContent
-import com.henry.xman.util.Utils.showMsgTip
-import com.henry.xman.util.Utils.updateConfigJson
+import com.henry.xman.util.DevUtil.getConfigContent
+import com.henry.xman.util.DevUtil.updateConfigJson
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextField
@@ -123,22 +123,22 @@ class DevInfoDialog(private val callback: ConfigCallback? = null) : JDialog() {
         val configFile = getConfigContent()
         //
         if (TextUtils.isEmpty(configFile)) {
-            showMsgTip("configFile is empty", "Error")
+            CommonUtil.showMsgTip("configFile is empty", "Error")
             updateConfigJson(null)
             return
         }
         config = JsonUtil.toObj(configFile, KitConfig::class.java)
         //
         if (tvDeps.getText().isEmpty()) {
-            showMsgTip("your deps info is null", "Error")
+            CommonUtil.showMsgTip("your deps info is null", "Error")
             return
         }
         if (moduleInfo.moduleName?.isEmpty() == true) {
-            showMsgTip("your ModuleName is null", "Error")
+            CommonUtil.showMsgTip("your ModuleName is null", "Error")
             return
         }
         if (tvVersion.getText().isEmpty()) {
-            showMsgTip("your version info is null", "Error")
+            CommonUtil.showMsgTip("your version info is null", "Error")
             return
         }
         moduleInfo.deps = tvDeps.getText()
