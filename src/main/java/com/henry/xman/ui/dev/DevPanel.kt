@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.components.JBList
 import com.henry.xman.bean.KitConfig
 import com.henry.xman.callback.ConfigCallback
-import com.henry.xman.util.Utils
+import com.henry.xman.util.DevUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.*
@@ -68,7 +68,7 @@ class DevPanel(private val project: Project) : DialogWrapper(project) {
     }
 
     private fun loadKitConfig() {
-        val kitConfig = Utils.getProjectConfig()
+        val kitConfig = DevUtil.getProjectConfig()
         kitConfig?.modules?.let {
             val list = DefaultListModel<KitConfig.ModuleInfo>()
             it.forEach { info ->
@@ -79,7 +79,7 @@ class DevPanel(private val project: Project) : DialogWrapper(project) {
     }
 
     override fun doOKAction() {
-        if (!Utils.checkConfigGradle()) {
+        if (!DevUtil.checkConfigGradle()) {
             return
         }
         super.doOKAction()

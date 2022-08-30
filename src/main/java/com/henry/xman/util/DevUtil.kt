@@ -1,5 +1,6 @@
 package com.henry.xman.util
 
+import com.henry.xman.X
 import com.henry.xman.bean.KitConfig
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -7,34 +8,22 @@ import org.apache.commons.lang.StringEscapeUtils
 import java.io.File
 
 
-object Utils {
+object DevUtil {
     private const val ProjectConfigFileName = "kit_config.json"
     private const val DepsConfigGradleName = "config.gradle"
     private const val ConfigPlugin = "apply from : \"config.gradle\""
 
-    private var project: Project? = null
 
-    fun initProject(project: Project) {
-        Utils.project = project
-    }
-
-    @JvmStatic
-    fun showMsgTip(msg: String, title: String? = null) {
-        Messages.showMessageDialog(
-            String(msg.toByteArray(), Charsets.UTF_8), title ?: "提示", Messages.getInformationIcon()
-        )
-    }
 
     @JvmStatic
     fun updateConfigJson(config: KitConfig? = null) {
-        project ?: return
-        project?.let {
+        X.project?.let {
             getConfigFile(it).writeText(JsonUtil.toJson(config ?: KitConfig().apply { projectName = it.name }))
         }
     }
 
     fun checkConfigGradle(): Boolean {
-        project?.let { p ->
+        X.project?.let { p ->
             val dir = p.basePath + File.separator + "app"
             val path = dir + File.separator + "build.gradle"
             val file = File(path)
@@ -68,6 +57,15 @@ object Utils {
     /**
      * pack your dev dependencies config info(dev flag must open),and update file
      */
+    /*
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute module("androidx.core:core-ktx") with project(":XXX")
+        }
+    }
+}
+    */
     private fun packConfigGradle(modules: MutableList<KitConfig.ModuleInfo>): String {
         val sb = StringBuilder()
         val settingSb = StringBuilder()
@@ -117,11 +115,11 @@ configurations.all {
      * 配置setting文件，只针对其他工程项目依赖时配置
      */
     private fun configSettingGradle(content: String) {
-        project?.let {
+        X.project?.let {
             val dir = it.basePath + File.separator + "settings.gradle"
             val file = File(dir)
             if (file.exists()) {
-                file.writeText(file.readText() + content)
+                file.appendText(content)
             }
         }
     }
@@ -131,8 +129,8 @@ configurations.all {
      */
     @JvmStatic
     fun getConfigContent(): String {
-        project ?: return ""
-        val file = getConfigFile(project!!)
+        X.project ?: return ""
+        val file = getConfigFile(X.project!!)
         return file.readText()
     }
 
