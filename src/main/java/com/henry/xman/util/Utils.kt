@@ -1,11 +1,8 @@
 package com.henry.xman.util
 
-import com.google.gson.GsonBuilder
-import com.intellij.openapi.fileEditor.OpenFileDescriptor
+import com.henry.xman.bean.KitConfig
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.henry.xman.bean.KitConfig
 import org.apache.commons.lang.StringEscapeUtils
 import java.io.File
 
@@ -14,7 +11,7 @@ object Utils {
     private const val ProjectConfigFileName = "kit_config.json"
     private const val DepsConfigGradleName = "config.gradle"
     private const val ConfigPlugin = "apply from : \"config.gradle\""
-    private val gson by lazy { GsonBuilder().create() }
+
     private var project: Project? = null
 
     fun initProject(project: Project) {
@@ -32,7 +29,7 @@ object Utils {
     fun updateConfigJson(config: KitConfig? = null) {
         project ?: return
         project?.let {
-            getConfigFile(it).writeText(toJson(config ?: KitConfig().apply { projectName = it.name }))
+            getConfigFile(it).writeText(JsonUtil.toJson(config ?: KitConfig().apply { projectName = it.name }))
         }
     }
 
@@ -60,7 +57,7 @@ object Utils {
                     return false
                 }
                 config.writeText(packConfigGradle(it))
-                openFile(p, config)
+                FileUtil.openFile(p, config)
                 return true
             }
             return false
@@ -117,7 +114,7 @@ configurations.all {
     }
 
     /**
-     *
+     * 配置setting文件，只针对其他工程项目依赖时配置
      */
     private fun configSettingGradle(content: String) {
         project?.let {
@@ -149,37 +146,8 @@ configurations.all {
     }
 
     fun getProjectConfig(): KitConfig? {
-        return toObj(getConfigContent(), KitConfig::class.java)
+        return JsonUtil.toObj(getConfigContent(), KitConfig::class.java)
     }
 
-    /**
-     * 打开文件
-     */
-    fun openFile(project: Project, file: File) {
-        val target = LocalFileSystem.getInstance().findFileByIoFile(file)
-        if (target != null) {
-            OpenFileDescriptor(project, target).navigate(true)
-        }
-    }
-
-    /**
-     * 刷新目录结构，参数：是否异步，是否递归，完成后的回调。不建议获取项目的baseDir，建议针对性的刷新指定目录
-     */
-    @JvmStatic
-    fun refreshDir(file: File) {
-        LocalFileSystem.getInstance().findFileByIoFile(file)?.refresh(true, true) {
-//
-        }
-    }
-
-    @JvmStatic
-    fun <T> toObj(str: String?, cls: Class<T>): T {
-        return gson.fromJson(str, cls)
-    }
-
-    @JvmStatic
-    fun toJson(obj: Any): String {
-        return gson.toJson(obj) ?: ""
-    }
 
 }

@@ -1,1 +1,14 @@
-{"projectName":"X-Man","modules":[{"deps":"fsfsf","moduleName":"Documents","path":"C:\\Users\\Henry.jia\\Documents","version":"111","desc":"fsfas","dev":false,"sameProject":false},{"deps":"klkl","moduleName":"Documents","path":"C:\\Users\\Henry.jia\\Documents","version":"111","desc":"","dev":false,"sameProject":true},{"deps":"qweq","moduleName":"Documents","path":"C:\\Users\\Henry.jia\\Documents","version":"111","desc":"","dev":false,"sameProject":true},{"deps":"dasdaD","moduleName":"Documents","path":"C:\\Users\\Henry.jia\\Documents","version":"111","desc":"","dev":false,"sameProject":true}]}
+{
+  "projectName": "X-Man",
+  "modules": [
+    {
+      "deps": "com.henry:lib-test",
+      "moduleName": "app",
+      "path": "D:\\workspace\\demo\\app",
+      "version": "1.0.1",
+      "desc": "",
+      "dev": false,
+      "sameProject": false
+    }
+  ]
+}

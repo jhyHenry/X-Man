@@ -2,11 +2,10 @@ package com.henry.xman.ui.dev
 
 import com.henry.xman.bean.KitConfig
 import com.henry.xman.callback.ConfigCallback
+import com.henry.xman.util.JsonUtil
 import com.henry.xman.util.Utils.getConfigContent
 import com.henry.xman.util.Utils.showMsgTip
-import com.henry.xman.util.Utils.toObj
 import com.henry.xman.util.Utils.updateConfigJson
-import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.components.JBTextField
@@ -128,7 +127,7 @@ class DevInfoDialog(private val callback: ConfigCallback? = null) : JDialog() {
             updateConfigJson(null)
             return
         }
-        config = toObj(configFile, KitConfig::class.java)
+        config = JsonUtil.toObj(configFile, KitConfig::class.java)
         //
         if (tvDeps.getText().isEmpty()) {
             showMsgTip("your deps info is null", "Error")

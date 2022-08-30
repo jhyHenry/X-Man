@@ -1,9 +1,8 @@
 package com.henry.xman.ui.dev
 
-import com.intellij.ui.components.JBTextField
 import com.henry.xman.bean.KitConfig
+import com.intellij.ui.components.JBTextField
 import java.awt.Component
-import javax.swing.JButton
 import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.ListCellRenderer
@@ -22,9 +21,6 @@ class KitModuleCell : ListCellRenderer<KitConfig.ModuleInfo> {
             text = "${item.deps}"
         }
         panel.add(name)
-//        panel.add(JButton().apply {
-//            text = "delete"
-//        })
 
         return panel
     }
