@@ -1,9 +1,8 @@
 package com.henry.xman.util
 
-import com.henry.xman.X
+import com.henry.xman.XMan
 import com.henry.xman.bean.KitConfig
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
 import org.apache.commons.lang.StringEscapeUtils
 import java.io.File
 
@@ -17,13 +16,13 @@ object DevUtil {
 
     @JvmStatic
     fun updateConfigJson(config: KitConfig? = null) {
-        X.project?.let {
+        XMan.project?.let {
             getConfigFile(it).writeText(JsonUtil.toJson(config ?: KitConfig().apply { projectName = it.name }))
         }
     }
 
     fun checkConfigGradle(): Boolean {
-        X.project?.let { p ->
+        XMan.project?.let { p ->
             val dir = p.basePath + File.separator + "app"
             val path = dir + File.separator + "build.gradle"
             val file = File(path)
@@ -115,7 +114,7 @@ configurations.all {
      * 配置setting文件，只针对其他工程项目依赖时配置
      */
     private fun configSettingGradle(content: String) {
-        X.project?.let {
+        XMan.project?.let {
             val dir = it.basePath + File.separator + "settings.gradle"
             val file = File(dir)
             if (file.exists()) {
@@ -129,8 +128,8 @@ configurations.all {
      */
     @JvmStatic
     fun getConfigContent(): String {
-        X.project ?: return ""
-        val file = getConfigFile(X.project!!)
+        XMan.project ?: return ""
+        val file = getConfigFile(XMan.project!!)
         return file.readText()
     }
 

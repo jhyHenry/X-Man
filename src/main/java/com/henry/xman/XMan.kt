@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
  * Author henry.jia
  * Description
  */
-object X {
+object XMan {
     lateinit var project: Project
 
     @JvmStatic

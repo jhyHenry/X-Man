@@ -36,9 +36,13 @@
                text="X-Man"
                description="X-Man">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="XDevelop"
-                    class="com.henry.xman.XMan"
-                    text="XDevelop" description="项目配置"/>
+            <action id="Develop"
+                    text="Develop" description="项目配置"
+                    class="com.henry.xman.ui.dev.DevelopAction"/>
+            <action id="PrintDeps" class="com.henry.xman.ui.deps.PrintDeps"
+                    text="Print Dependencies" description="PrintDeps"/>
+            <action id="DepAction" class="com.henry.xman.ui.deps.DepAction"
+                    text="Dependencies" description="依赖列表"/>
         </group>
     </actions>
 </idea-plugin>
