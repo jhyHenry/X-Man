@@ -1,19 +1,22 @@
-package com.henry.xman;
+package com.henry.xman.ui.deps;
 
-import com.henry.xman.ui.dev.DevPanel;
+import com.henry.xman.XMan;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 
-
-public class XMan extends AnAction {
+/**
+ * Date  2022/8/30.
+ * Author henry.jia
+ * Description
+ */
+public class DepAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(PlatformDataKeys.PROJECT);
-        X.init(project);
-        new DevPanel(project).show();
+        XMan.init(project);
+        new DepPanel();
     }
-
 }
