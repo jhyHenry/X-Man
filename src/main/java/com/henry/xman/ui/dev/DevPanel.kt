@@ -14,7 +14,8 @@ import javax.swing.*
 /**
  * XDevelop panel
  */
-class DevPanel(private val project: Project) : DialogWrapper(project) {
+open class DevPanel(private val project: Project) : DialogWrapper(project) {
+
     private val listModule by lazy {
         JBList<KitConfig.ModuleInfo>().apply {
             cellRenderer = KitModuleCell()
