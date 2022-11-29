@@ -43,6 +43,8 @@
                     text="Print Dependencies" description="PrintDeps"/>
             <action id="DepAction" class="com.henry.xman.ui.deps.DepAction"
                     text="Dependencies" description="依赖列表"/>
+            <action id="DataStorePreview" class="com.henry.xman.ui.datastore.DataStorePreview"
+                    text="DataStorePreview" description="DataStore预览"/>
         </group>
     </actions>
 </idea-plugin>
