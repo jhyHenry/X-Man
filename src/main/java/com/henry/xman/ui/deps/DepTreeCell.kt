@@ -3,8 +3,6 @@ package com.henry.xman.ui.deps
 import com.henry.xman.bean.DepModuleInfo
 import com.intellij.ui.components.JBTextField
 import java.awt.Component
-import java.awt.Dimension
-import javax.swing.JPanel
 import javax.swing.JTree
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeCellRenderer

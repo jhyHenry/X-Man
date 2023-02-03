@@ -3,6 +3,7 @@ package com.henry.xman.ui.datastore
 import com.henry.xman.util.CommonUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
 import org.apache.commons.lang.StringEscapeUtils
 import java.awt.BorderLayout
@@ -18,7 +19,7 @@ import javax.swing.*
 class DataStorePanel(private val project: Project) : DialogWrapper(project) {
     private var path = ""
     private val command get() = """protoc --decode_raw < ${StringEscapeUtils.escapeJava(path)}"""
-    private var jText: JTextField? = null
+    private var jList: JBList<String>? = null
 
     init {
         //一定要先调用init()
@@ -37,23 +38,16 @@ class DataStorePanel(private val project: Project) : DialogWrapper(project) {
                     setDataStorePath()
                 }
             })
-            add(JButton().apply {
-                text = "show"
-                addActionListener {
-                    decodeDataStore()
-                }
-            })
         }
     }
 
     override fun createCenterPanel(): JComponent? {
-        jText = JTextField().apply {
-            text = "result"
+        jList = JBList<String>().apply {
+            setBounds(120, 50, 100, 50)
         }
-        val scrollPane = JBScrollPane(jText).apply {
-            preferredSize = Dimension(800, 480)
+        val scrollPane = JBScrollPane(jList).apply {
+            preferredSize = Dimension(720, 480)
             verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
-            horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
             isWheelScrollingEnabled = true
         }
         return JPanel().apply {
@@ -65,12 +59,16 @@ class DataStorePanel(private val project: Project) : DialogWrapper(project) {
      * 设置路径
      */
     private fun setDataStorePath() {
-        val chooser = JFileChooser()
-        chooser.fileSelectionMode = JFileChooser.FILES_ONLY
-        chooser.showOpenDialog(null)
+        val chooser = JFileChooser().apply {
+            fileSelectionMode = JFileChooser.FILES_ONLY
+        }
+        val flag = chooser.showOpenDialog(null)
         val file = chooser.selectedFile
         if (file.isFile) {
             path = file.absolutePath
+        }
+        if (flag == JFileChooser.APPROVE_OPTION) {
+            decodeDataStore()
         }
     }
 
@@ -84,16 +82,42 @@ class DataStorePanel(private val project: Project) : DialogWrapper(project) {
             return
         }
         try {
-            //linux系统下执行命令,windows环境暂时没测试
-            val process = Runtime.getRuntime().exec(arrayOf("bash", "-c", command))
+            //Linux("Linux"),Mac_OS("Mac OS"),Mac_OS_X("Mac OS X"),Windows("Windows")
+            val cmd = if (System.getProperty("os.name").contains("Linux")) {
+                //linux
+                arrayOf("bash", "-c", command)
+            } else if (System.getProperty("os.name").contains("Mac")) {
+                //mac
+                arrayOf("/bin/bash", "-c", command)
+            } else {
+                //windows
+                arrayOf("cmd", "/c", command)
+            }
+
+            val process = Runtime.getRuntime().exec(cmd)
+
             val inStream = process.inputStream.readAllBytes().toString(Charset.defaultCharset())
             val errorStream = process.errorStream.readAllBytes().toString(Charset.defaultCharset())
 
             if (errorStream.isNotEmpty()) {
                 CommonUtil.showMsgTip(errorStream, "Error")
             }
-            jText?.text = inStream
-            println("DataStorePb:$inStream")
+            //  1: "agree_state"  格式：1：key
+            //  2 {                    2{  不定值:value }
+            //    1: 1
+            //  }
+            val keyValues = inStream.split("1 {").filter {
+                it.isNotEmpty()
+            }.map {
+                //去掉前后空格、}
+                it.substring(1, it.length - 2)
+            }.map {
+                val array = it.split("2 {")
+                val key = array[0].substring(array[0].indexOfFirst { it == '"' }).trim()
+                val value = array[1].substring(array[1].indexOf(":") + 1).trim().dropLast(1).trim()
+                "K-V:$key - $value"
+            }
+            jList?.setListData(keyValues.toTypedArray())
         } catch (e: Exception) {
             e.printStackTrace()
         }
